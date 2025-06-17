@@ -1,0 +1,14 @@
+changes for RTP_PingPong
+---------------------------
+
+version	date		author	comment
+4.3.0	10.11.2015	ws		- UartTX module, vUartTX_Task for sending a pdo via UART
+							- minor Bugfix: team_nr is now displayed correctly in swim module
+4.2.0	01.05.2015	ws		- app_struct for M0/M4 as with FR_WSFilt, FR_PWM_Control projects
+					ws		- new uart module for derivedRTP_UART_MsgQueue project
+4.1.0	27.07.2014	ws		- new team number command an <number>
+...
+4.0.4	24.10.2013	ws		- initial 4357 version
+
+
+ 
