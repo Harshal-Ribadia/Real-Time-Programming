@@ -1,0 +1,89 @@
+// 
+/// \file		 PingPong.c
+/// \brief		 RTP-Lab intro.
+/// \author		 Wolfgang Schulter
+/// \license	 for educational purposes only, no warranty, see license.txt
+/// \date		 14.01.2013 ws:  initial version
+
+#include "PingPong.h"  				// PingPong module header
+xSemaphoreHandle semPing; // semaphore Ping
+xSemaphoreHandle semPong; // semaphore Pong
+uint16_t counter = 0;					// count variable incremented by ping
+uint16_t counter_print = 0;			// count variable printed by PrintTask
+// extern uint16_t counter=0;
+
+#define TICK_RATE_KHZ	(configTICK_RATE_HZ/1000)
+uint16_t delay1 = 20 * TICK_RATE_KHZ;// number of ticks <=> ms delay, set correct value in milliseconds
+uint16_t delay2 = 1500 * TICK_RATE_KHZ;	// number of ticks <=> delay, set correct value in milliseconds
+
+uint8_t do_printf = 0;
+bool led_4_value = false;
+
+void init_PingPong()  // - create semaphores
+{
+	vSemaphoreCreateBinary(semPing);
+	vSemaphoreCreateBinary(semPong);
+	xSemaphoreTake(semPing, portMAX_DELAY);
+}
+
+void vPingTask(void *pvParameters) // - toggle_LED2
+{
+	while (1) {
+		if ( pst && ! pst [ST_PING]. bwcet . binit ) BWCET_INIT (ST_PING);
+		xSemaphoreTake(semPing, portMAX_DELAY);
+		BWCET_T1 (ST_PING);
+		set_display_var(2, 1);
+		SET_LED2(1);
+		vTaskDelay(delay1);
+		counter++;
+		set_display_var(2, 0);
+		SET_LED2(0);
+		xSemaphoreGive(semPong);
+		BWCET_T2 (ST_PING);
+	}
+}
+
+void vPongTask(void *pvParameters) // - toggle_LED3
+{
+	while (1) {
+		if ( pst && ! pst [ ST_PONG ]. bwcet . binit ) BWCET_INIT ( ST_PONG );
+		xSemaphoreTake(semPong, portMAX_DELAY);
+		BWCET_T1 (ST_PONG) ;
+		set_display_var(3, 1);
+		SET_LED3(1);
+		vTaskDelay(delay1);
+		set_display_var(3, 0);
+		SET_LED3(0);
+		xSemaphoreGive(semPing);
+		BWCET_T1 (ST_PONG) ;
+	}
+}
+
+void vPrintTask(void *pvParameters)  // - display_max count on display
+{
+	while (1) {
+		if ( pst && ! pst [ST_PRINT]. bwcet . binit ) BWCET_INIT (ST_PRINT);
+		BWCET_T1 (ST_PRINT);
+		vTaskDelay(delay2);
+
+		if (led_4_value == false) {
+			set_display_var(4, 1);
+			SET_LED4(1);
+
+		}
+
+		else {
+			set_display_var(4, 0);
+			SET_LED4(0);
+		}
+
+		led_4_value = !led_4_value;
+		counter_print=counter;
+		set_display_var(1, counter);
+		counter = 0;
+		BWCET_T1 (ST_PRINT) ;
+	}
+}
+
+
+

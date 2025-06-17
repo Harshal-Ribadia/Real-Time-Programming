@@ -1,0 +1,24 @@
+
+// \file		 PingPong.h
+// \brief		 RTP-Lab intro.
+// \author		 Wolfgang Schulter
+
+#ifndef __PINGPONG_H__
+#define __PINGPONG_H__  	  	  // only once ..
+
+#include "mcommon.h" // commons for all modules
+
+// --- variables to be accessed from outside (extern)
+extern xSemaphoreHandle semPing;			  // semaphore Ping
+extern xSemaphoreHandle semPong;			 // semaphore Pong
+extern uint16_t counter_print;			    // count variable printed
+
+// --- 4 functions to be accessed
+void init_PingPong();
+void vPingTask(void * pvParameters);
+void vPongTask (void * pvParameters);
+void vPrintTask (void * pvParameters);
+
+#endif
+
+

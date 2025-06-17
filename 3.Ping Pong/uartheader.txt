@@ -1,0 +1,32 @@
+// ----------------------------------------------------------------------------
+/// \file		UartTX.h
+/// \brief		Realizes UART Transmission as FreeRTOS task.
+/// \author		Wolfgang Schulter
+/// \license	for educational purposes only, no warranty, see license.txt
+/// \date		10.11.2015 ws:  initial version
+// ----------------------------------------------------------------------------
+
+#ifndef __UART_TX_H__
+#define __UART_TX_H__  	  	// only once ..
+
+#include "mcommon.h"  	// commons for all modules
+extern uint16_t counter_print;
+// ----------------------------------------------------------------------------
+// UART TX PDO
+// ----------------------------------------------------------------------------
+typedef struct _pdo_t {
+	uint16_t sig;		// some signature column 1 and 2 swapped
+	uint8_t team_nr;	// some signature column 3
+	uint16_t wcet_ping; // column 5 and 6 since 16 bit
+	uint16_t wcet_pong; // column 9 and 10 since 16 bit
+	uint16_t poti_val;  // column
+	uint16_t js_state; // column 11 values 1,2,4,8 , t, b, r, l
+	uint16_t counter; // column 13
+} PDO_T;
+extern PDO_T pdo;
+
+void vUartTX_Task(void * pvParameters);
+
+#endif // __UART_TX_H__
+
+
